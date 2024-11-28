@@ -1,3 +1,17 @@
+//Função principal 
+public class Cozinha {
+    public static void main(String[] args) {
+        // Recursos compartilhados: dois cozinheiros
+        Cozinheiro cozinheiro1 = new Cozinheiro("Cozinheiro 1");
+        Cozinheiro cozinheiro2 = new Cozinheiro("Cozinheiro 2");
+
+        // Criar 5 clientes - threads
+        for (int i = 1; i <= 5; i++) {
+            Cliente cliente = new Cliente("Cliente " + i, cozinheiro1, cozinheiro2);
+            new Thread(cliente).start();
+        }
+    }
+}
 
 // Recurso compartilhado - Cozinheiro
 class Cozinheiro {
@@ -44,21 +58,6 @@ class Cliente implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-}
-
-//Função principal 
-public class Cozinha {
-    public static void main(String[] args) {
-        // Recursos compartilhados: dois cozinheiros
-        Cozinheiro cozinheiro1 = new Cozinheiro("Cozinheiro 1");
-        Cozinheiro cozinheiro2 = new Cozinheiro("Cozinheiro 2");
-
-        // Criar 5 clientes - threads
-        for (int i = 1; i <= 5; i++) {
-            Cliente cliente = new Cliente("Cliente " + i, cozinheiro1, cozinheiro2);
-            new Thread(cliente).start();
         }
     }
 }
