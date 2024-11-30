@@ -6,9 +6,10 @@ public class Processo {
     int tempoCpuTotal; // Tempo total necessário na CPU
     int tempoRestante; // Tempo restante para conclusão
     int tempoEspera = 0; // Tempo total de espera
-    int tempoTurnaround = 0; // Tempo de turnaround
+    int tempoTurnaround = 0; // Tempo de turnaround - tempo total do processo
 
     public Processo(String id, String nome, int prioridade, boolean ioBound, int tempoCpuTotal) {
+
         this.id = id;
         this.nome = nome;
         this.prioridade = prioridade;

@@ -1,11 +1,11 @@
-//Função principal 
+//Função/classe principal 
 public class Cozinha {
     public static void main(String[] args) {
         // Recursos compartilhados: dois cozinheiros
         Cozinheiro cozinheiro1 = new Cozinheiro("Cozinheiro 1");
         Cozinheiro cozinheiro2 = new Cozinheiro("Cozinheiro 2");
 
-        // Criar 5 clientes - threads
+        // Criar 5 clientes: threads
         for (int i = 1; i <= 5; i++) {
             Cliente cliente = new Cliente("Cliente " + i, cozinheiro1, cozinheiro2);
             new Thread(cliente).start();
@@ -46,7 +46,7 @@ class Cliente implements Runnable {
 
     @Override
     public void run() {
-        // Cliente tenta acessar um dos dois cozinheiros
+        // Cliente tenta ser atendido por um dos dois cozinheiros
         while (true) {
             try {
                 if (Math.random() < 0.5) {
@@ -54,7 +54,7 @@ class Cliente implements Runnable {
                 } else {
                     cozinheiro2.atender(nome);
                 }
-                break; // Termina após ser atendido
+                break; // Termina depois ser atendido
             } catch (Exception e) {
                 e.printStackTrace();
             }
