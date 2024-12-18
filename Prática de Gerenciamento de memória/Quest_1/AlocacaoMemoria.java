@@ -1,10 +1,12 @@
 import java.util.*;
 
 public class AlocacaoMemoria {
+
+    // Classe que representa um processo
     private static class Processo {
-        String nome;
-        int id;
-        int tamanho;
+        String nome; // Nome do processo
+        int id; // ID do processo
+        int tamanho; // Tamanho do processo em MB
 
         Processo(String nome, int id, int tamanho) {
             this.nome = nome;
@@ -13,31 +15,34 @@ public class AlocacaoMemoria {
         }
     }
 
+    // Classe que representa um bloco de memória
     private static class BlocoMemoria {
-        int inicio;
-        int tamanho;
-        boolean livre;
+        int inicio; // Índice inicial do bloco na memória
+        int tamanho; // Tamanho do bloco em MB
+        boolean livre; // Indica se o bloco está livre
 
         BlocoMemoria(int inicio, int tamanho) {
             this.inicio = inicio;
             this.tamanho = tamanho;
-            this.livre = true;
+            this.livre = true; // Por padrão, todos os blocos começam livres
         }
     }
 
-    private static List<BlocoMemoria> memoria = new ArrayList<>();
-    private static List<Processo> processos = new ArrayList<>();
-    private static List<Processo> swap = new ArrayList<>();
-    private static int memoriaTotal;
+    // Variáveis globais
+    private static int memoriaTotal; // Capacidade total de memória
+    private static List<BlocoMemoria> memoria = new ArrayList<>(); // Lista de blocos de memória
+    private static List<Processo> processos = new ArrayList<>(); // Lista de processos alocados
+    private static List<Processo> swap = new ArrayList<>(); // Lista de processos na memória secundária (swap)
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Configuração inicial
+        // Configuração inicial da memória
         System.out.print("Informe o tamanho total da memória (em MB): ");
         memoriaTotal = scanner.nextInt();
-        memoria.add(new BlocoMemoria(0, memoriaTotal));
+        memoria.add(new BlocoMemoria(0, memoriaTotal)); // Inicialmente, um único bloco livre ocupa toda a memória
 
+        // Loop principal para interação com o usuário
         while (true) {
             System.out.println("\nMenu:");
             System.out.println("1. Criar processo");
@@ -63,6 +68,7 @@ public class AlocacaoMemoria {
         }
     }
 
+    // Método para criar e alocar um novo processo
     private static void criarProcesso(Scanner scanner) {
         System.out.print("Nome do processo: ");
         String nome = scanner.next();
@@ -74,38 +80,48 @@ public class AlocacaoMemoria {
         Processo processo = new Processo(nome, id, tamanho);
         boolean alocado = alocarMemoria(processo);
 
+        // Tenta alocar memória; se não conseguir, compacta e tenta novamente
         if (!alocado) {
             compactarMemoria();
             alocado = alocarMemoria(processo);
         }
 
+        // Se ainda não conseguir, remove um processo aleatório e tenta novamente
         if (!alocado) {
             removerProcessoAleatorio();
             alocarMemoria(processo);
         }
+
         if (!alocado) {
             System.out.println("Falha: não foi possível alocar o processo " + processo.nome + " após todas as tentativas.");
-        }        
+        }
     }
 
+    // Método que implementa a alocação de memória pelo Best-Fit
     private static boolean alocarMemoria(Processo processo) {
-        BlocoMemoria melhorBloco = null;
+        BlocoMemoria bestFit = null;
 
+        // Encontra o menor bloco que ainda seja grande o suficiente
         for (BlocoMemoria bloco : memoria) {
             if (bloco.livre && bloco.tamanho >= processo.tamanho) {
-                if (melhorBloco == null || bloco.tamanho < melhorBloco.tamanho) {
-                    melhorBloco = bloco;
+                if (bestFit == null || bloco.tamanho < bestFit.tamanho) {
+                    bestFit = bloco;
                 }
             }
         }
 
-        if (melhorBloco != null) {
-            melhorBloco.livre = false;
-            if (melhorBloco.tamanho > processo.tamanho) {
-                memoria.add(new BlocoMemoria(melhorBloco.inicio + processo.tamanho, melhorBloco.tamanho - processo.tamanho));
+        // Se encontrou um bloco adequado
+        if (bestFit != null) {
+            bestFit.livre = false; // Marca o bloco como ocupado
+
+            // Se o bloco é maior que o necessário, cria um bloco para o espaço restante
+            if (bestFit.tamanho > processo.tamanho) {
+                int tamanhoRestante = bestFit.tamanho - processo.tamanho;
+                memoria.add(new BlocoMemoria(bestFit.inicio + processo.tamanho, tamanhoRestante));
             }
-            melhorBloco.tamanho = processo.tamanho;
-            processos.add(processo);
+
+            bestFit.tamanho = processo.tamanho; // Ajusta o tamanho do bloco ocupado
+            processos.add(processo); // Adiciona o processo à lista de processos alocados
             return true;
         }
 
@@ -113,11 +129,13 @@ public class AlocacaoMemoria {
         return false;
     }
 
+    // Método para compactar a memória
     private static void compactarMemoria() {
         System.out.println("Realizando compactação...");
         int inicioAtual = 0;
         List<BlocoMemoria> novaMemoria = new ArrayList<>();
 
+        // Move todos os blocos ocupados para o início da memória
         for (BlocoMemoria bloco : memoria) {
             if (!bloco.livre) {
                 novaMemoria.add(new BlocoMemoria(inicioAtual, bloco.tamanho));
@@ -125,22 +143,25 @@ public class AlocacaoMemoria {
             }
         }
 
+        // Adiciona o espaço livre restante como um único bloco
         if (inicioAtual < memoriaTotal) {
             novaMemoria.add(new BlocoMemoria(inicioAtual, memoriaTotal - inicioAtual));
         }
 
-        memoria = novaMemoria;
+        memoria = novaMemoria; // Substitui a lista de blocos pela versão compactada
     }
 
+    // Método para remover aleatoriamente um processo
     private static void removerProcessoAleatorio() {
         if (!processos.isEmpty()) {
             Random random = new Random();
             int indice = random.nextInt(processos.size());
-            Processo processoRemovido = processos.remove(indice);
+            Processo processoRemovido = processos.remove(indice); // Remove o processo da lista de processos alocados
 
             System.out.println("Removendo processo " + processoRemovido.nome + " para memória secundária.");
-            swap.add(processoRemovido);
+            swap.add(processoRemovido); // Adiciona o processo à memória secundária
 
+            // Libera o bloco correspondente na memória
             for (BlocoMemoria bloco : memoria) {
                 if (!bloco.livre && bloco.tamanho == processoRemovido.tamanho) {
                     bloco.livre = true;
@@ -152,6 +173,7 @@ public class AlocacaoMemoria {
         }
     }
 
+    // Método para exibir o estado atual da memória
     private static void mostrarEstadoMemoria() {
         System.out.println("\nEstado da memória:");
         for (BlocoMemoria bloco : memoria) {
