@@ -44,13 +44,14 @@ public class AlocacaoMemoria {
 
         // Loop principal para interação com o usuário
         while (true) {
+            System.out.println("--------------------------------------");
             System.out.println("\nMenu:");
             System.out.println("1. Criar processo");
             System.out.println("2. Mostrar estado da memória");
             System.out.println("3. Sair");
             System.out.print("Escolha uma opção: ");
             int escolha = scanner.nextInt();
-
+            System.out.println("--------------------------------------");
             switch (escolha) {
                 case 1:
                     criarProcesso(scanner);
@@ -69,14 +70,14 @@ public class AlocacaoMemoria {
     }
 
     // Método para criar e alocar um novo processo
-    private static void criarProcesso(Scanner scanner) {
+    private static void criarProcesso(Scanner scanner) {;
         System.out.print("Nome do processo: ");
         String nome = scanner.next();
         System.out.print("ID do processo: ");
         int id = scanner.nextInt();
         System.out.print("Tamanho do processo (em MB): ");
         int tamanho = scanner.nextInt();
-
+        System.out.println("--------------------------------------");
         Processo processo = new Processo(nome, id, tamanho);
         boolean alocado = alocarMemoria(processo);
 
@@ -90,7 +91,9 @@ public class AlocacaoMemoria {
             removerProcessoAleatorio();
             alocarMemoria(processo);
         }
-
+        if(alocado){
+            System.out.println("Processo " + processo.nome + " alocado com sucesso.");
+        }
         if (!alocado) {
             System.out.println("Falha: não foi possível alocar o processo " + processo.nome + " após todas as tentativas.");
         }
@@ -178,15 +181,16 @@ public class AlocacaoMemoria {
         for (BlocoMemoria bloco : memoria) {
             System.out.println("Posição: " + bloco.inicio + ", Tamanho: " + bloco.tamanho + "MB, Livre: " + bloco.livre);
         }
-
+        System.out.println("--------------------------------------");
         System.out.println("\nProcessos alocados:");
         for (Processo processo : processos) {
             System.out.println("Nome: " + processo.nome + ", ID: " + processo.id + ", Tamanho: " + processo.tamanho + "MB");
         }
-
+        System.out.println("--------------------------------------");
         System.out.println("\nProcessos na memória secundária:");
         for (Processo processo : swap) {
             System.out.println("Nome: " + processo.nome + ", ID: " + processo.id + ", Tamanho: " + processo.tamanho + "MB");
         }
+        System.out.println("--------------------------------------");
     }
 }
