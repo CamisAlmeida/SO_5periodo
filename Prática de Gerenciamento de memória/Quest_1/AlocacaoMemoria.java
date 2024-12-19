@@ -48,7 +48,8 @@ public class AlocacaoMemoria {
             System.out.println("\nMenu:");
             System.out.println("1. Criar processo");
             System.out.println("2. Mostrar estado da memória");
-            System.out.println("3. Sair");
+            System.out.println("3. Remover Processo pelo indice: ");
+            System.out.println("4. Sair");
             System.out.print("Escolha uma opção: ");
             int escolha = scanner.nextInt();
             System.out.println("--------------------------------------");
@@ -60,6 +61,11 @@ public class AlocacaoMemoria {
                     mostrarEstadoMemoria();
                     break;
                 case 3:
+                    System.out.print("Digite o numero do prcesso a ser removido: ");
+                    int indice = scanner.nextInt();
+                    removerProcesso(indice);
+                    break;
+                case 4:
                     System.out.println("Encerrando...");
                     scanner.close();
                     return;
@@ -89,6 +95,7 @@ public class AlocacaoMemoria {
         // Se ainda não conseguir, remove um processo aleatório e tenta novamente
         if (!alocado) {
             removerProcessoAleatorio();
+            compactarMemoria();
             alocarMemoria(processo);
         }
         if(alocado){
@@ -175,6 +182,26 @@ public class AlocacaoMemoria {
         }
     }
 
+    private static void removerProcesso(int indice) {
+        indice = indice-1;
+        if (indice >= 0 && indice < processos.size()) {
+            Processo processoRemovido = processos.remove(indice); // Remove o processo da lista de processos alocados
+            System.out.println("Removendo processo " + processoRemovido.nome + " para memória secundária.");
+            swap.add(processoRemovido); // Adiciona o processo à memória secundária
+    
+            // Libera o bloco correspondente na memória
+            for (BlocoMemoria bloco : memoria) {
+                if (!bloco.livre && bloco.tamanho == processoRemovido.tamanho) {
+                    bloco.livre = true;
+                    break;
+                }
+            }
+        } else {
+            System.out.println("Índice inválido! Nenhum processo encontrado.");
+        }
+    }
+
+    
     // Método para exibir o estado atual da memória
     private static void mostrarEstadoMemoria() {
         System.out.println("\nEstado da memória:");
