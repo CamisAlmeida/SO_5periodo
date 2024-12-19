@@ -82,10 +82,15 @@ public class AlocacaoMemoria {
             compactarMemoria();
             alocado = alocarMemoria(processo);
         }
-        if (!alocado) {
-            removerProcessoAleatorio();
-            alocarMemoria(processo);
+
+        while(!alocado && !processos.isEmpty()){
+            if (!alocado) {
+                removerProcessoAleatorio();
+                compactarMemoria();
+                alocado = alocarMemoria(processo);
+            }
         }
+
         if (!alocado) {
             System.out.println("Falha: não foi possível alocar o processo " + processo.nome + " após todas as tentativas.");
         }
