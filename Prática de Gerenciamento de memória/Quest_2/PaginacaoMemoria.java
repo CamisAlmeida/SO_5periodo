@@ -66,11 +66,9 @@ public class PaginacaoMemoria {
                 if (memoriaFisica.size() >= totalPaginasFisicas) { // Se a memória física está cheia
                     Pagina paginaRemovida = memoriaFisica.poll(); // Remove a página mais antiga
                     System.out.println("Página substituída: Processo " + paginaRemovida.idProcesso + ", Página " + paginaRemovida.id);
-                    memoriaVirtual.add(paginaRemovida); // Retorna a página para a memória virtual
                     pageMiss++; // Incrementa o contador de falhas de página
                 }
                 memoriaFisica.add(pagina); // Adiciona a nova página
-                memoriaVirtual.remove(pagina); // Remove a página da memória virtual
                 System.out.println("Página alocada na memória física: Processo " + pagina.idProcesso + ", Página " + pagina.id);
             }
         }
