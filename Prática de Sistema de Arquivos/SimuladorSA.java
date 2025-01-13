@@ -3,14 +3,13 @@ import java.util.*;
 // Representa um bloco de memória no sistema de arquivos
 class Bloco {
     boolean estaOcupado; // Indica se o bloco está ocupado
-    String nomeArquivo;  // Nome do arquivo que ocupa este bloco (se aplicável)
-    boolean fragmentado; // Indica se há fragmentação interna no bloco
+    String nomeArquivo;  // Nome do arquivo que ocupa este bloco
+    int fragmentado;     // Indica quanto do bloco está fragmentado (em bytes)
 
-    // Construtor para inicializar o bloco como livre
     Bloco() {
         this.estaOcupado = false;
         this.nomeArquivo = null;
-        this.fragmentado = false;
+        this.fragmentado = 0;
     }
 }
 
@@ -20,7 +19,6 @@ class Arquivo {
     int tamanho; // Tamanho do arquivo em bytes
     List<Integer> blocosAlocados; // Lista de índices dos blocos alocados para o arquivo
 
-    // Construtor para criar um novo arquivo
     Arquivo(String nome, int tamanho) {
         this.nome = nome;
         this.tamanho = tamanho;
@@ -33,7 +31,6 @@ class Diretorio {
     String nome; // Nome do diretório
     List<Arquivo> arquivos; // Lista de arquivos no diretório
 
-    // Construtor para criar um novo diretório
     Diretorio(String nome) {
         this.nome = nome;
         this.arquivos = new ArrayList<>();
@@ -47,7 +44,6 @@ class SistemaDeArquivos {
     private Bloco[] blocos; // Array representando os blocos de memória
     private Diretorio raiz; // Diretório raiz do sistema de arquivos
 
-    // Construtor para inicializar o sistema de arquivos
     SistemaDeArquivos(int tamanhoMemoria, int tamanhoBloco) {
         this.totalBlocos = tamanhoMemoria / tamanhoBloco; // Calcula o número de blocos
         this.tamanhoBloco = tamanhoBloco;
@@ -92,9 +88,9 @@ class SistemaDeArquivos {
             blocos[indiceBloco].nomeArquivo = nomeArquivo;
             arquivo.blocosAlocados.add(indiceBloco);
 
-            // Marcar fragmentação no último bloco alocado se necessário
+            // Marcar fragmentação no último bloco alocado 
             if (i == blocosNecessarios - 1 && tamanho % tamanhoBloco != 0) {
-                blocos[indiceBloco].fragmentado = true;
+                blocos[indiceBloco].fragmentado = tamanhoBloco - (tamanho % tamanhoBloco);
             }
         }
 
@@ -128,11 +124,29 @@ class SistemaDeArquivos {
         for (int indiceBloco : arquivoParaRemover.blocosAlocados) {
             blocos[indiceBloco].estaOcupado = false; // Marca o bloco como livre
             blocos[indiceBloco].nomeArquivo = null; // Remove a associação ao arquivo
-            blocos[indiceBloco].fragmentado = false; // Remove o estado de fragmentação
+            blocos[indiceBloco].fragmentado = 0; // Remove o estado de fragmentação
         }
 
         dir.arquivos.remove(arquivoParaRemover); // Remove o arquivo do diretório
         System.out.println("Arquivo excluído com sucesso.");
+    }
+
+    // Método para mostrar os arquivos de um diretório
+    public void mostrarArquivosDiretorio(String nomeDiretorio) {
+        Diretorio dir = encontrarDiretorio(nomeDiretorio); // Localiza o diretório especificado
+        if (dir == null) {
+            System.out.println("Erro: Diretório não encontrado.");
+            return;
+        }
+
+        if (dir.arquivos.isEmpty()) {
+            System.out.println("O diretório está vazio.");
+        } else {
+            System.out.println("Arquivos no diretório '" + nomeDiretorio + "':");
+            for (Arquivo arquivo : dir.arquivos) {
+                System.out.println("- " + arquivo.nome + " (" + arquivo.tamanho + " KB)");
+            }
+        }
     }
 
     // Método para mostrar o estado de alocação dos blocos
@@ -140,7 +154,7 @@ class SistemaDeArquivos {
         System.out.println("Estado dos blocos:");
         for (int i = 0; i < blocos.length; i++) {
             if (blocos[i].estaOcupado) {
-                String fragmentacao = blocos[i].fragmentado ? ", fragmentado (espaço desperdiçado)" : "";
+                String fragmentacao = blocos[i].fragmentado > 0 ? ", Há fragmentação interna (" + blocos[i].fragmentado + " KB desperdiçados)" : "";
                 System.out.println("Bloco " + i + ": Ocupado (" + tamanhoBloco + " KB, " + blocos[i].nomeArquivo + ")" + fragmentacao);
             } else {
                 System.out.println("Bloco " + i + ": Livre");
@@ -213,12 +227,16 @@ public class SimuladorSA {
 
         while (true) {
             System.out.println("--------------------------------------");
-            System.out.println("\n1. Criar arquivo\n2. Excluir arquivo\n3. Mostrar alocação de blocos\n4 Sair");
+            System.out.println("\n1. Criar arquivo");
+            System.out.println("2. Excluir arquivo");
+            System.out.println("3. Mostrar alocação de blocos");
+            System.out.println("4. Mostrar arquivos do diretório");
+            System.out.println("5. Sair");
             System.out.println("--------------------------------------");
             System.out.print("Escolha uma opção: ");
-            System.out.println("--------------------------------------");
             int opcao = scanner.nextInt();
-
+            System.out.println("--------------------------------------");
+        
             switch (opcao) {
                 case 1:
                     System.out.print("Diretório (use 'raiz'): ");
@@ -242,12 +260,17 @@ public class SimuladorSA {
                     sistema.mostrarAlocacaoBlocos();
                     break;
                 case 4:
+                    System.out.print("Diretório (use 'raiz'): ");
+                    dir = scanner.next();
+                    sistema.mostrarArquivosDiretorio(dir);
+                    break;
+                case 5:
                     System.out.println("Encerrando...");
                     scanner.close();
                     return;
                 default:
                     System.out.println("Opção inválida.");
             }
-        }
+        }        
     }
 }
