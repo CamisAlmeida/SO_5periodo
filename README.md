@@ -93,3 +93,51 @@ Implemente a alocação de memória com paginação. Deve ser possível configur
 - Caso a memória esteja cheia, aplicar o algoritmo de substituição de páginas escolhido.  
 - Ao final da execução, exibir a quantidade de **page misses**.  
 
+---
+
+## **Atividade 3: Simulador de Sistema de Arquivos**  
+
+### **Objetivo:**
+Implemente um "mini" simulador de sistemas de arquivos, permitindo que o usuário crie e exclua arquivos e diretórios, além de realizar a listagem de arquivos de um diretório. A simulação deve ser feita utilizando um mecanismo de alocação de sua escolha, como encadeada, indexada, FAT, NTFS, entre outros.
+
+### **Requisitos:**
+1. **Alocação de Arquivos e Diretórios:**
+   - Permitir que o usuário crie e exclua arquivos e diretórios.
+   - A cada operação realizada, simular a alocação de blocos no sistema de arquivos.
+   - Indicar a alocação de arquivos e diretórios nos blocos de memória.
+
+2. **Detalhamento dos Arquivos e Diretórios:**
+   - Informar o nome e tamanho de cada arquivo e diretório.
+   - Não permitir arquivos ou diretórios com nomes iguais.
+   - Limitar a estrutura de diretórios a apenas dois níveis (diretório raiz e subdiretórios ou arquivos dentro dele).
+
+3. **Simulação de Fragmentação:**
+   - Indicar se há fragmentação interna ou externa no sistema de arquivos após a alocação.
+
+4. **Tamanho de Memória e Blocos:**
+   - Permitir configurar o tamanho máximo de memória física (em KB, MB ou outra unidade).
+   - Definir o tamanho dos blocos de memória (mesma unidade da memória física).
+
+### **Funcionalidades:**
+- **Criação de Arquivos e Diretórios:**
+   - O usuário pode criar arquivos, informando o nome e o tamanho.
+   - O usuário pode excluir arquivos e diretórios.
+   
+- **Listagem de Arquivos:**
+   - O usuário pode listar os arquivos presentes no diretório.
+   
+- **Simulação de Alocação e Fragmentação:**
+   - A cada operação (criação ou exclusão), o sistema mostra como os blocos estão sendo alocados e se há fragmentação.
+   
+- **Simulação de Mecanismo de Alocação:**
+   - Utilização do **NTFS** ou outro mecanismo de alocação escolhido, com a possibilidade de alocar blocos de forma contígua ou não.
+
+### **Objetivos Educacionais:**
+- Simular a alocação de memória em sistemas de arquivos.
+- Identificar e gerenciar fragmentação interna e externa.
+- Simular a criação, exclusão e listagem de arquivos de forma simples, mas eficaz.
+- Aplicar conceitos de sistemas de arquivos em uma implementação prática e visual.
+
+#### **Exemplo de Funcionalidade:**
+- O usuário pode criar um arquivo de 25 KB. O sistema aloca três blocos de memória para ele e mostra se algum bloco ficou fragmentado.
+- O usuário pode excluir um arquivo e o sistema libera os blocos associados, informando se houve fragmentação após a exclusão.
