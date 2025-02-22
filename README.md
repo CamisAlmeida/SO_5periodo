@@ -132,12 +132,26 @@ Implemente um "mini" simulador de sistemas de arquivos, permitindo que o usuári
 - **Simulação de Mecanismo de Alocação:**
    - Utilização do **NTFS** ou outro mecanismo de alocação escolhido, com a possibilidade de alocar blocos de forma contígua ou não.
 
-### **Objetivos Educacionais:**
-- Simular a alocação de memória em sistemas de arquivos.
-- Identificar e gerenciar fragmentação interna e externa.
-- Simular a criação, exclusão e listagem de arquivos de forma simples, mas eficaz.
-- Aplicar conceitos de sistemas de arquivos em uma implementação prática e visual.
+## **Atividade 4: Simulador de Gerenciamento de E/S **  
 
-#### **Exemplo de Funcionalidade:**
-- O usuário pode criar um arquivo de 25 KB. O sistema aloca três blocos de memória para ele e mostra se algum bloco ficou fragmentado.
-- O usuário pode excluir um arquivo e o sistema libera os blocos associados, informando se houve fragmentação após a exclusão.
+### **Parte 1: Simulador de Gerenciamento de E/S**  
+
+Implementei um "mini" simulador de gerenciamento de E/S utilizando o algoritmo **SCAN** para escalonamento de braço de disco.  
+
+#### **Funcionalidades implementadas**:  
+1. Configuração do intervalo de blocos (e/ou setores) mínimo e máximo em disco.  
+2. Definição da ordem de blocos a serem visitados (ou geração aleatória a partir de uma quantidade).  
+3. Exibição da ordem dos blocos visitados na prática, conforme o algoritmo SCAN.  
+4. Cálculo e exibição do tempo de seek parcial a cada requisição e do tempo total de seek.  
+   - O tempo de seek considera uma unidade de tempo por bloco (ex.: mover do bloco 2 ao 5 gasta 3 u.t.).  
+   - Inclui o tempo de seek gasto para movimentar a cabeça de disco até as extremidades.  
+---
+
+### **Parte 2: Simulação de RAID**  
+
+Implementei a simulação de um sistema de armazenamento utilizando **RAID 5** com **3 discos**.  
+
+#### **Funcionalidades implementadas**:  
+1. Distribuição dos dados e paridade entre os 3 discos, conforme o padrão RAID 5.  
+2. Exibição da alocação dos blocos de dados e paridade em cada disco.  
+3. Manutenção da interface com o usuário inalterada, apenas mostrando o resultado da distribuição nos discos.  
