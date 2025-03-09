@@ -47,15 +47,6 @@ Implemente um simulador de escalonamento preemptivo com as seguintes funcionalid
   - **Tempo de turnaround** de cada processo.  
   - **Tempo médio de espera** de todos os processos.  
 
-#### **Apresentação**  
-Grave um vídeo explicando o código e a execução. Caso seja feito em dupla, cada integrante deve apresentar sua parte.  
-
-#### **Avaliação**  
-- A nota é individual, valendo **25% da 1ª VA**.  
-- Se feito em dupla, cada integrante será avaliado pela parte apresentada.  
-
----
-
 ## **Atividade 2: Gerenciamento de Memória**  
 
 ### **Parte 1: Alocação de Memória com Partições Fixas ou Variáveis**  
@@ -155,3 +146,15 @@ Implementei a simulação de um sistema de armazenamento utilizando **RAID 5** c
 1. Distribuição dos dados e paridade entre os 3 discos, conforme o padrão RAID 5.  
 2. Exibição da alocação dos blocos de dados e paridade em cada disco.  
 3. Manutenção da interface com o usuário inalterada, apenas mostrando o resultado da distribuição nos discos.  
+
+
+## **Atividade 5: Prática sobre Segurança**
+
+### **Parte 1: Criptografia e Quebra de Senhas**
+Foi implementada uma técnica de criptografia para proteger as senhas digitadas pelo usuário (com tamanho máximo de 8 caracteres) e uma técnica para tentar "quebrar" essas senhas, medindo o tempo gasto para a conclusão da quebra. A cifra utilizada foi a Cifra de César.
+
+### **Parte 2: Proteção de Diretórios e Arquivos**
+Nesta parte, foi adicionada uma funcionalidade à prática de sistemas de arquivos que permite ao usuário:
+
+- Proteger um determinado diretório ou arquivo com uma senha criptografada.
+- Permitir o acesso a esses arquivos ou diretórios apenas mediante a inserção da senha correta.
